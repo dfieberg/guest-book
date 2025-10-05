@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guest Book Entries</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; }
+</style>
+</head>
+<body>
+
+<h2>Guest Book Entries (Owner Access)</h2>
+<button onclick="loadEntries()">Load Entries</button>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>City</th>
+      <th>Comments</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody id="entriesTable"></tbody>
+</table>
+
+<script>
+  const password = prompt('Enter admin password');
+  if (password !== 'yourpassword') {
+    alert('Incorrect password');
+    window.location.href = '/';
+  }
+
+  function loadEntries() {
+    fetch('https://your-backend-endpoint/api/entries')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('entriesTable');
+        tbody.innerHTML = '';
+        data.forEach(entry => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${entry.name}</td>
+            <td>${entry.city}</td>
+            <td>${entry.comments}</td>
+            <td>${new Date(entry.timestamp).toLocaleString()}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+  }
+</script>
+
+</body>
+</html>
